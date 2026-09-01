@@ -60,6 +60,15 @@ const accountUserController = {
         catch (error) {
             res.json({ code: 'error', message: 'Lỗi! Không thể xác thực!' });
         }
+    }, 
+
+    accountUserLogout: async (req: Request, res: Response) => {
+        try {
+            res.clearCookie('token');
+            res.json({ code: 'success', message: 'Đăng xuất thành công!' });
+        } catch (error) {
+            res.json({ code: 'error', message: 'Lỗi! Đăng xuất thất bại!' });
+        }
     }
 }
 

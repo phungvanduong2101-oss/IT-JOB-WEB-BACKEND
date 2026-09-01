@@ -4,5 +4,6 @@ import accountUserController from "../../controllers/user/account-user.controlle
 import * as accountUserValidate from "../../middlewares/validates/user/account-user.validate"; 
 
 Router.post('/register',accountUserValidate.accountUserValidateRegister ,accountUserController.accountUserRegister); 
-Router.post('/login',accountUserValidate.accountUserValidateLogin ,accountUserController.accountUserLogin); 
+Router.post('/login',accountUserValidate.accountUserValidateLogin ,accountUserController.accountUserLogin);  
+Router.get('/logout',accountUserController.accountUserLogout);
 export default Router;
