@@ -1,4 +1,5 @@
-import { AccountUserModel } from '../../models/account-user.model';
+import { AccountUserModel } from '../../models/account-user.model'; 
+import {AccountCompanyModel} from '../../models/account-company.model';
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken';
@@ -41,7 +42,7 @@ const accountUserController = {
         }
     },
 
-    accountUserAuth: async (req: Request, res: Response) => {
+    accountAuth: async (req: Request, res: Response) => {
         try { 
             const token = req.cookies.token;
             if (!token) {
@@ -50,12 +51,19 @@ const accountUserController = {
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
             const { id, email } = decoded;
-            const user = await AccountUserModel.findOne({_id: id, email: email}).select('-password');
-            if (!user) {
+            const user = await AccountUserModel.findOne({_id: id, email: email}).select('-password'); 
+            const company = await AccountCompanyModel.findOne({_id: id, email: email}).select('-password');
+            if (!user && !company) {
                 res.clearCookie('token');
                 return res.json({ code: 'error', message: 'Token không hợp lệ!' });
             }
-            res.json({ code: 'success', message: 'Token hợp lệ!', inforUser: { id: user._id, email: user.email, fullName: user.fullName } });
+           if (user) {
+                return res.json({ code: 'success', message: 'Xác thực thành công!', inforUser: user });
+            }
+            if (company) {
+                return res.json({ code: 'success', message: 'Xác thực thành công!', inforCompany: company });
+            } 
+            return res.json({ code: 'error', message: 'Không tìm thấy thông tin người dùng hoặc công ty!' });
         }
         catch (error) {
             res.json({ code: 'error', message: 'Lỗi! Không thể xác thực!' });

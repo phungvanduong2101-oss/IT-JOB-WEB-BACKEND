@@ -3,7 +3,8 @@ const app = express()
 const port = 4000
 import CORS from 'cors';
 import { connectDB } from './configs/connect.DB';
-import userRouter from './routes/user/index.route'; 
+import userRouter from './routes/user/index.route';  
+import companyRouter from './routes/company/index.route'
 import cookieParser from 'cookie-parser';
 
 app.use(CORS({
@@ -14,7 +15,8 @@ app.use(CORS({
 }));
 app.use(express.json()); 
 app.use(cookieParser());
-app.use('/user', userRouter);
+app.use('/user', userRouter); 
+app.use('/company', companyRouter);
 connectDB();
 
 
